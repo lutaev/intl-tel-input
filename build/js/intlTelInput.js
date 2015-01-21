@@ -581,6 +581,12 @@ https://github.com/Bluefieldscom/intl-tel-input.git
             var formatted;
             if (this.options.autoFormat && window.intlTelInputUtils) {
                 formatted = intlTelInputUtils.formatNumber(val, this.selectedCountryData.iso2, addSuffix);
+
+                var valNotFormatted = val.replace(/[\-\+\s]/g, '');
+                if(addSuffix !== undefined && this.options.smartFormat && formatted.replace(/[\-\+\s]/g, '') != valNotFormatted){
+                    formatted = '+' + valNotFormatted;
+                }
+
                 // ensure we dont go over maxlength. we must do this here to truncate any formatting suffix, and also handle paste events
                 var max = this.telInput.attr("maxlength");
                 if (max && formatted.length > max) {
@@ -815,6 +821,24 @@ https://github.com/Bluefieldscom/intl-tel-input.git
             }
             return false;
         },
+        sNumberOverflow: function(){
+            var val = $.trim(this.telInput.val());
+            var valNotFormatted = val.replace(/[\-\+\s]/g, '');
+            return valNotFormatted === val.replace(/\+/g, '') && valNotFormatted.length >= 5;
+        },
+        isNumberStartWithWrong: function(){
+            var val = $.trim(this.telInput.val()).replace(/[\-\+\s]/g, '');
+            var one = val[0];
+            var two = val.substr(0, 2);
+            var three = val.substr(0, 3);
+
+            var wrongCodes = ['0', '214', '217', '219', '259', '28', '292', '293', '294', '295', '296', '384', '424', '425', '426', '427', '428', '429',
+                              '671', '693', '694', '695', '696', '697', '698', '699', '72', '801', '802', '803', '804', '805', '806', '807',
+                              '809', '83', '851', '854', '857', '858', '859', '875', '876', '877', '879', '884', '885', '887', '888', '889', '89',
+                              '969', '978', '990', '997', '999'];
+
+            return _.indexOf(wrongCodes, one) != -1 || _.indexOf(wrongCodes, two) != -1 || _.indexOf(wrongCodes, three) != -1;
+        },    
         // load the utils script
         loadUtils: function(path) {
             var utilsScript = path || this.options.utilsScript;
