@@ -878,7 +878,7 @@ https://github.com/Bluefieldscom/intl-tel-input.git
         // this is called when the utils are ready
         utilsLoaded: function() {
             // if autoFormat is enabled and there's an initial value in the input, then format it
-            if (this.options.autoFormat && this.telInput.val()) {
+            if (this.options.autoFormat && this.telInput.val() && !this.preventUtilsCallback) {
                 this._updateVal(this.telInput.val());
             }
             this._updatePlaceholder();
