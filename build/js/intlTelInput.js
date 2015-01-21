@@ -1,7 +1,7 @@
 /*
-International Telephone Input v3.7.1
-https://github.com/Bluefieldscom/intl-tel-input.git
-*/
+ International Telephone Input v3.7.1
+ https://github.com/Bluefieldscom/intl-tel-input.git
+ */
 // wrap in UMD - see https://github.com/umdjs/umd/blob/master/jqueryPlugin.js
 (function(factory) {
     if (typeof define === "function" && define.amd) {
@@ -14,45 +14,45 @@ https://github.com/Bluefieldscom/intl-tel-input.git
 })(function($, window, document, undefined) {
     "use strict";
     var pluginName = "intlTelInput", id = 1, // give each instance it's own id for namespaced event handling
-    defaults = {
-        // automatically format the number according to the selected country
-        autoFormat: true,
-        // if there is just a dial code in the input: remove it on blur, and re-add it on focus
-        autoHideDialCode: true,
-        // default country
-        defaultCountry: "",
-        // token for ipinfo - required for https or over 1000 daily page views support
-        ipinfoToken: "",
-        // don't insert international dial codes
-        nationalMode: false,
-        // number type to use for placeholders
-        numberType: "MOBILE",
-        // display only these countries
-        onlyCountries: [],
-        // the countries at the top of the list. defaults to united states and united kingdom
-        preferredCountries: [ "us", "gb" ],
-        // make the dropdown the same width as the input
-        responsiveDropdown: false,
-        // specify the path to the libphonenumber script to enable validation/formatting
-        utilsScript: ""
-    }, keys = {
-        UP: 38,
-        DOWN: 40,
-        ENTER: 13,
-        ESC: 27,
-        PLUS: 43,
-        A: 65,
-        Z: 90,
-        ZERO: 48,
-        NINE: 57,
-        SPACE: 32,
-        BSPACE: 8,
-        DEL: 46,
-        CTRL: 17,
-        CMD1: 91,
-        // Chrome
-        CMD2: 224
-    }, windowLoaded = false;
+        defaults = {
+            // automatically format the number according to the selected country
+            autoFormat: true,
+            // if there is just a dial code in the input: remove it on blur, and re-add it on focus
+            autoHideDialCode: true,
+            // default country
+            defaultCountry: "",
+            // token for ipinfo - required for https or over 1000 daily page views support
+            ipinfoToken: "",
+            // don't insert international dial codes
+            nationalMode: false,
+            // number type to use for placeholders
+            numberType: "MOBILE",
+            // display only these countries
+            onlyCountries: [],
+            // the countries at the top of the list. defaults to united states and united kingdom
+            preferredCountries: [ "us", "gb" ],
+            // make the dropdown the same width as the input
+            responsiveDropdown: false,
+            // specify the path to the libphonenumber script to enable validation/formatting
+            utilsScript: ""
+        }, keys = {
+            UP: 38,
+            DOWN: 40,
+            ENTER: 13,
+            ESC: 27,
+            PLUS: 43,
+            A: 65,
+            Z: 90,
+            ZERO: 48,
+            NINE: 57,
+            SPACE: 32,
+            BSPACE: 8,
+            DEL: 46,
+            CTRL: 17,
+            CMD1: 91,
+            // Chrome
+            CMD2: 224
+        }, windowLoaded = false;
     // keep track of if the window.load event has fired as impossible to check after the fact
     $(window).load(function() {
         windowLoaded = true;
@@ -114,8 +114,8 @@ https://github.com/Bluefieldscom/intl-tel-input.git
             this._initListeners();
         },
         /********************
-   *  PRIVATE METHODS
-   ********************/
+         *  PRIVATE METHODS
+         ********************/
         // prepare all of the country data, including onlyCountries and preferredCountries options
         _processCountryData: function() {
             // set the instances country data objects
@@ -319,7 +319,7 @@ https://github.com/Bluefieldscom/intl-tel-input.git
                         // allowed keys are just numeric keys and plus
                         // we must allow plus for the case where the user does select-all and then hits plus to start typing a new number. we could refine this logic to first check that the selection contains a plus, but that wont work in old browsers, and I think it's overkill anyway
                         var isAllowedKey = e.which >= keys.ZERO && e.which <= keys.NINE || e.which == keys.PLUS, input = that.telInput[0], noSelection = that.isGoodBrowser && input.selectionStart == input.selectionEnd, max = that.telInput.attr("maxlength"), // assumes that if max exists, it is >0
-                        isBelowMax = max ? that.telInput.val().length < max : true;
+                            isBelowMax = max ? that.telInput.val().length < max : true;
                         // first: ensure we dont go over maxlength. we must do this here to prevent adding digits in the middle of the number
                         // still reformat even if not an allowed key as they could by typing a formatting char, but ignore if there's a selection as doesn't make sense to replace selection with illegal char and then immediately remove it
                         if (isBelowMax && (isAllowedKey || noSelection)) {
@@ -338,8 +338,8 @@ https://github.com/Bluefieldscom/intl-tel-input.git
                 // the "enter" key event from selecting a dropdown item is triggered here on the input, because the document.keydown handler that initially handles that event triggers a focus on the input, and so the keyup for that same key event gets triggered here. weird, but just make sure we dont bother doing any re-formatting in this case (we've already done preventDefault in the keydown handler, so it wont actually submit the form or anything).
                 if (e.which == keys.ENTER) {} else if (that.options.autoFormat && window.intlTelInputUtils) {
                     var isCtrl = e.which == keys.CTRL || e.which == keys.CMD1 || e.which == keys.CMD2, input = that.telInput[0], // noSelection defaults to false for bad browsers, else would be reformatting on all ctrl keys e.g. select-all/copy
-                    noSelection = that.isGoodBrowser && input.selectionStart == input.selectionEnd, // cursorAtEnd defaults to false for bad browsers else they would never get a reformat on delete
-                    cursorAtEnd = that.isGoodBrowser && input.selectionStart == that.telInput.val().length;
+                        noSelection = that.isGoodBrowser && input.selectionStart == input.selectionEnd, // cursorAtEnd defaults to false for bad browsers else they would never get a reformat on delete
+                        cursorAtEnd = that.isGoodBrowser && input.selectionStart == that.telInput.val().length;
                     // if delete in the middle: reformat with no suffix (no need to reformat if delete at end)
                     // if backspace: reformat with no suffix (need to reformat if at end to remove any lingering suffix - this is a feature)
                     // if ctrl and no selection (i.e. could have just been a paste): reformat (if cursorAtEnd: add suffix)
@@ -368,7 +368,7 @@ https://github.com/Bluefieldscom/intl-tel-input.git
         // when autoFormat is enabled: handle various key events on the input: the 2 main situations are 1) adding a new number character, which will replace any selection, reformat, and try to preserve the cursor position. and 2) reformatting on backspace, or paste event
         _handleInputKey: function(newNumericChar, addSuffix) {
             var val = this.telInput.val(), newCursor = null, cursorAtEnd = false, // raw DOM element
-            input = this.telInput[0];
+                input = this.telInput[0];
             if (this.isGoodBrowser) {
                 var selectionEnd = input.selectionEnd, originalLen = val.length;
                 cursorAtEnd = selectionEnd == originalLen;
@@ -479,7 +479,7 @@ https://github.com/Bluefieldscom/intl-tel-input.git
         // decide where to position dropdown (depends on position within viewport, and scroll)
         _setDropdownPosition: function() {
             var inputTop = this.telInput.offset().top, windowTop = $(window).scrollTop(), // dropdownFitsBelow = (dropdownBottom < windowBottom)
-            dropdownFitsBelow = inputTop + this.telInput.outerHeight() + this.dropdownHeight < windowTop + $(window).height(), dropdownFitsAbove = inputTop - this.dropdownHeight > windowTop;
+                dropdownFitsBelow = inputTop + this.telInput.outerHeight() + this.dropdownHeight < windowTop + $(window).height(), dropdownFitsAbove = inputTop - this.dropdownHeight > windowTop;
             // dropdownHeight - 1 for border
             var cssTop = !dropdownFitsBelow && dropdownFitsAbove ? "-" + (this.dropdownHeight - 1) + "px" : "";
             this.countryList.css("top", cssTop);
@@ -770,8 +770,8 @@ https://github.com/Bluefieldscom/intl-tel-input.git
             return dialCode;
         },
         /********************
-   *  PUBLIC METHODS
-   ********************/
+         *  PUBLIC METHODS
+         ********************/
         // remove plugin
         destroy: function() {
             // make sure the dropdown is closed (and unbind listeners)
@@ -815,13 +815,13 @@ https://github.com/Bluefieldscom/intl-tel-input.git
         // validate the input val - assumes the global function isValidNumber (from utilsScript)
         isValidNumber: function() {
             var val = $.trim(this.telInput.val()), countryCode = this.options.nationalMode ? this.selectedCountryData.iso2 : "", // libphonenumber allows alpha chars, but in order to allow that, we'd need a method to retrieve the processed number, with letters replaced with numbers
-            containsAlpha = /[a-zA-Z]/.test(val);
+                containsAlpha = /[a-zA-Z]/.test(val);
             if (!containsAlpha && window.intlTelInputUtils) {
                 return intlTelInputUtils.isValidNumber(val, countryCode);
             }
             return false;
         },
-        sNumberOverflow: function(){
+        isNumberOverflow: function(){
             var val = $.trim(this.telInput.val());
             var valNotFormatted = val.replace(/[\-\+\s]/g, '');
             return valNotFormatted === val.replace(/\+/g, '') && valNotFormatted.length >= 5;
@@ -833,12 +833,12 @@ https://github.com/Bluefieldscom/intl-tel-input.git
             var three = val.substr(0, 3);
 
             var wrongCodes = ['0', '214', '217', '219', '259', '28', '292', '293', '294', '295', '296', '384', '424', '425', '426', '427', '428', '429',
-                              '671', '693', '694', '695', '696', '697', '698', '699', '72', '801', '802', '803', '804', '805', '806', '807',
-                              '809', '83', '851', '854', '857', '858', '859', '875', '876', '877', '879', '884', '885', '887', '888', '889', '89',
-                              '969', '978', '990', '997', '999'];
+                '671', '693', '694', '695', '696', '697', '698', '699', '72', '801', '802', '803', '804', '805', '806', '807',
+                '809', '83', '851', '854', '857', '858', '859', '875', '876', '877', '879', '884', '885', '887', '888', '889', '89',
+                '969', '978', '990', '997', '999'];
 
             return _.indexOf(wrongCodes, one) != -1 || _.indexOf(wrongCodes, two) != -1 || _.indexOf(wrongCodes, three) != -1;
-        },    
+        },
         // load the utils script
         loadUtils: function(path) {
             var utilsScript = path || this.options.utilsScript;
@@ -881,6 +881,8 @@ https://github.com/Bluefieldscom/intl-tel-input.git
             if (this.options.autoFormat && this.telInput.val() && !this.options.preventUtilsCallback) {
                 this._updateVal(this.telInput.val());
             }
+            this.telInput.intlTelInput("setNumber", this.telInput.val());
+            this.telInput.trigger('keyup');
             this._updatePlaceholder();
         }
     };
@@ -922,9 +924,9 @@ https://github.com/Bluefieldscom/intl-tel-input.git
         }
     };
     /********************
- *  STATIC METHODS
- ********************/
-    // get the country data object
+     *  STATIC METHODS
+     ********************/
+        // get the country data object
     $.fn[pluginName].getCountryData = function() {
         return allCountries;
     };
@@ -939,22 +941,22 @@ https://github.com/Bluefieldscom/intl-tel-input.git
     // Originally from https://github.com/mledoze/countries
     // then modified using the following JavaScript (NOW OUT OF DATE):
     /*
-var result = [];
-_.each(countries, function(c) {
-  // ignore countries without a dial code
-  if (c.callingCode[0].length) {
-    result.push({
-      // var locals contains country names with localised versions in brackets
-      n: _.findWhere(locals, {
-        countryCode: c.cca2
-      }).name,
-      i: c.cca2.toLowerCase(),
-      d: c.callingCode[0]
-    });
-  }
-});
-JSON.stringify(result);
-*/
+     var result = [];
+     _.each(countries, function(c) {
+     // ignore countries without a dial code
+     if (c.callingCode[0].length) {
+     result.push({
+     // var locals contains country names with localised versions in brackets
+     n: _.findWhere(locals, {
+     countryCode: c.cca2
+     }).name,
+     i: c.cca2.toLowerCase(),
+     d: c.callingCode[0]
+     });
+     }
+     });
+     JSON.stringify(result);
+     */
     // then with a couple of manual re-arrangements to be alphabetical
     // then changed Kazakhstan from +76 to +7
     // and Vatican City from +379 to +39 (see issue 50)
