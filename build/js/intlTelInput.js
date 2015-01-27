@@ -898,8 +898,10 @@
             if (this.options.autoFormat && this.telInput.val() && !this.options.preventUtilsCallback) {
                 this._updateVal(this.telInput.val());
             }
-            this.telInput.intlTelInput("setNumber", this.telInput.val());
-            this.telInput.trigger('keyup');
+            if(this.options.triggerKeyup){
+                this.telInput.intlTelInput("setNumber", this.telInput.val());
+                this.telInput.trigger('keyup');
+            }
             this._updatePlaceholder();
         }
     };
