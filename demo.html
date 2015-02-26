@@ -18,14 +18,17 @@
     <script src="build/js/intlTelInput.js"></script>
     <script>
       $("#mobile-number").intlTelInput({
+        //allowExtensions: true,
         //autoFormat: false,
         //autoHideDialCode: false,
-        //defaultCountry: "jp",
-        //nationalMode: true,
+        //autoPlaceholder: false,
+        //defaultCountry: "auto",
+        //ipinfoToken: "yolo",
+        //nationalMode: false,
         //numberType: "MOBILE",
         //onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
         //preferredCountries: ['cn', 'jp'],
-        //responsiveDropdown: true,
+        //preventInvalidNumbers: true,
         utilsScript: "lib/libphonenumber/build/utils.js"
       });
     </script>

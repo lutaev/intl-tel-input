@@ -6,8 +6,8 @@ $hoverColor: rgba(0, 0, 0, 0.05);
 $greyText: #999;
 $greyBorder: #CCC;
 
-$flagHeight: 11px;
-$flagWidth: 16px;
+$flagHeight: 13px;
+$flagWidth: 18px;
 $flagPadding: 8px;
 // this border width is used for the popup and divider, but it is also
 // assumed to be the border width of the input, which we do not control
@@ -60,12 +60,22 @@ $selectedFlagWidth: $flagWidth + $flagPadding + $arrowWidth + (2 * $arrowPadding
     margin-bottom: 0 !important;
 
     // make space for the selected flag
-    // Note: no !important here, as the user may want to tweak this so that the 
+    // Note: no !important here, as the user may want to tweak this so that the
     // perceived input padding matches their existing styles
     padding-left: $selectedFlagWidth + $inputPadding;
 
     // any margin-left here will push the selected-flag away
     margin-left: 0;
+
+    // when user presses invalid key, we add a class which instantly adds a bg color,
+    // then when we remove that class, this does a quick fade back to no bg
+    transition: background-color 100ms ease-out;
+  }
+  // when user presses invalid key, add this class temporarily to change bg color
+  input.iti-invalid-key {
+    // override the default transition state to show the change instantly
+    transition: background-color 0;
+    background-color: #FFC7C7;
   }
 
   .flag-dropdown {
@@ -85,7 +95,7 @@ $selectedFlagWidth: $flagWidth + $flagPadding + $arrowWidth + (2 * $arrowPadding
     }
   }
   // disable hover state when input is disabled
-  input[disabled] + .flag-dropdown:hover {
+  input[disabled] + .flag-dropdown:hover, input[readonly] + .flag-dropdown:hover {
     cursor: default;
     .selected-flag {
       background-color: transparent;
@@ -103,7 +113,7 @@ $selectedFlagWidth: $flagWidth + $flagPadding + $arrowWidth + (2 * $arrowPadding
     padding: 0 0 0 $flagPadding;
 
     // vertically center the flag
-    .flag {
+    .iti-flag {
       position: absolute;
       top: 50%;
       margin-top: -1 * floor($flagHeight / 2);
@@ -139,7 +149,7 @@ $selectedFlagWidth: $flagWidth + $flagPadding + $arrowWidth + (2 * $arrowPadding
     z-index: 2;
 
     // inline flags
-    .flag {
+    .iti-flag {
       display: inline-block;
     }
 
@@ -151,8 +161,13 @@ $selectedFlagWidth: $flagWidth + $flagPadding + $arrowWidth + (2 * $arrowPadding
     background-color: white;
     border: $borderWidth solid $greyBorder;
 
-    // wide enough to fit long country names
-    width: 430px;
+    // don't let the contents wrap AKA the container will be as wide as the contents
+    white-space: nowrap;
+    // except on small screens, where we force the dropdown width to match the input
+    @media (max-width: 500px) {
+      white-space: normal;
+    }
+
     max-height: 200px;
     overflow-y: scroll;
 
@@ -177,8 +192,19 @@ $selectedFlagWidth: $flagWidth + $flagPadding + $arrowWidth + (2 * $arrowPadding
     }
 
     // spacing between country flag, name and dial code
-    .flag, .country-name {
+    .iti-flag, .country-name {
       margin-right: 6px;
     }
+  }
+
+  // on mobiles we use a select for the country dropdown
+  select {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: $selectedFlagWidth;
+    height: 100%;
+    opacity: 0;
   }
 }

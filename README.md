@@ -1,8 +1,7 @@
 # International Telephone Input [![Build Status](https://travis-ci.org/Bluefieldscom/intl-tel-input.png)](https://travis-ci.org/Bluefieldscom/intl-tel-input)
 A jQuery plugin for entering and validating international telephone numbers. It adds a flag dropdown to any input, which lists all the countries and their international dial codes next to their flags.
 
-![alt tag](https://raw.github.com/Bluefieldscom/intl-tel-input/master/screenshot.png)
-
+<img src="https://raw.github.com/Bluefieldscom/intl-tel-input/master/screenshot.png" width="422px" height="247px">
 
 ## Table of Contents
 
@@ -60,15 +59,23 @@ You can view a live demo and some examples of how to use the various options her
   </script>
   ```
   
-4. Optional: the recommended way to use the plugin is to initialise it with the `utilsScript` option to enable formatting/validation etc., and the `nationalMode` option to allow users to enter national numbers (which you can convert to international numbers using `getCleanNumber`).
+4. **Recommended:** initialise the plugin with the `utilsScript` option to enable formatting/validation, and to allow you to extract full international numbers using `getNumber`.
 
 
 ## Options
 Note: any options that take country codes should be lower case [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) codes  
 
+**allowExtensions**  
+Type: `Boolean` Default: `false`  
+When `autoFormat` is enabled, this option will support formatting extension numbers e.g. "+1 (702) 123-1234 ext. 12345".
+
 **autoFormat**  
 Type: `Boolean` Default: `true`  
-Format the number on each keypress according to the country-specific formatting rules. This will also prevent the user from entering invalid characters (listen for the `invalidkey` event if you want to give the user feedback - [see example](http://jackocnr.com/lib/intl-tel-input/examples/gen/invalid-key.html)). Requires the `utilsScript` option for the formatting logic.
+Format the number on each keypress according to the country-specific formatting rules. This will also prevent the user from entering invalid characters (triggering a red flash in the input - see [Troubleshooting](#troubleshooting) to customise this). Requires the `utilsScript` option.
+
+**autoPlaceholder**  
+Type: `Boolean` Default: `true`  
+Add or remove input placeholder with an example number for the selected country. Requires the `utilsScript` option.
 
 **autoHideDialCode**  
 Type: `Boolean` Default: `true`  
@@ -83,8 +90,8 @@ Type: `String` Default: `""`
 When setting `defaultCountry` to `"auto"`, we use a service called [ipinfo](http://ipinfo.io) which requires a special token to be used over https, or if you make >1000 requests/day. Use this option to pass in that token.
 
 **nationalMode**  
-Type: `Boolean` Default: `false`  
-Allow users to enter national numbers (and not have to think about international dial codes). Formatting, validation and placeholders still work. Then you can use `getCleanNumber` to extract a standardised (E.164) international number - [see example](http://jackocnr.com/lib/intl-tel-input/examples/gen/national-mode.html).
+Type: `Boolean` Default: `true`  
+Allow users to enter national numbers (and not have to think about international dial codes). Formatting, validation and placeholders still work. Then you can use `getNumber` to extract a full international number - [see example](http://jackocnr.com/lib/intl-tel-input/examples/gen/national-mode.html).
 
 **numberType**  
 Type: `String` Default: `""`  
@@ -98,10 +105,6 @@ Display only the countries you specify - [see example](http://jackocnr.com/lib/i
 Type: `Array` Default: `["us", "gb"]`  
 Specify the countries to appear at the top of the list.
 
-**responsiveDropdown**  
-Type: `Boolean` Default: `false`  
-Set the dropdown's width to be the same as the input. This is automatically enabled for small screens.
-
 **utilsScript**  
 Type: `String` Default: `""` Example: `"lib/libphonenumber/build/utils.js"`  
 Enable formatting/validation etc. by specifying the path to the included utils.js script, which is fetched only when the page has finished loading (on window.load) to prevent blocking. See [Utilities Script](#utilities-script) for more information. _Note that if you're lazy loading the plugin script itself (intlTelInput.js) this will not work and you will need to use the `loadUtils` method instead._
@@ -114,10 +117,19 @@ Remove the plugin from the input, and unbind any event listeners.
 $("#mobile-number").intlTelInput("destroy");
 ```
 
-**getCleanNumber**  
-Get the current number formatted to the [E.164 standard](http://en.wikipedia.org/wiki/E.164). Requires the `utilsScript` option. _Note that even if `nationalMode` is enabled, this will still return an international number, as specified by the E.164 standard._  
+**getExtension**  
+Get the extension part of the current number, so if the number was `"+1 (702) 123-1234 ext. 12345"` this would return `"12345"`.
 ```js
-var cleanNumber = $("#mobile-number").intlTelInput("getCleanNumber");
+var extension = $("#mobile-number").intlTelInput("getExtension");
+```
+Returns a string e.g. `"12345"`
+
+**getNumber**  
+Get the current number formatted to the given type (defaults to [E.164 standard](http://en.wikipedia.org/wiki/E.164)). The different formatting types are available in the enum `intlTelInputUtils.numberFormat` - taken from [here](https://github.com/googlei18n/libphonenumber/blob/master/javascript/i18n/phonenumbers/phonenumberutil.js#L883). Requires the `utilsScript` option. _Note that even if `nationalMode` is enabled, this can still return a full international number._  
+```js
+var intlNumber = $("#mobile-number").intlTelInput("getNumber");
+// or
+var ntlNumber = $("#mobile-number").intlTelInput("getNumber", intlTelInputUtils.numberFormat.NATIONAL);
 ```
 Returns a string e.g. `"+17024181234"`
 
@@ -189,7 +201,7 @@ $("#mobile-number").intlTelInput("setNumber", "+44 7733 123 456");
 
 ## Static Methods
 **getCountryData**  
-Get all of the plugin's country data - either to re-use elsewhere e.g. to populate a country dropdown - [see example](http://jackocnr.com/lib/intl-tel-input/examples/gen/country-sync.html), or to modify - [see example](http://jackocnr.com/lib/intl-tel-input/examples/gen/modify-country-data.html).  
+Get all of the plugin's country data - either to re-use elsewhere e.g. to populate a country dropdown - [see example](http://jackocnr.com/lib/intl-tel-input/examples/gen/country-sync.html), or to modify - [see example](http://jackocnr.com/lib/intl-tel-input/examples/gen/modify-country-data.html). Note that any modifications must be done before initialising the plugin.  
 ```js
 var countryData = $.fn.intlTelInput.getCountryData();
 ```
@@ -202,20 +214,14 @@ Returns an array of country objects:
 }, ...]
 ```
 
-**setCountryData**  
-Set all of the plugin's country data. Note: the data should be the same format as that above i.e. an array of objects.  
-```js
-$.fn.intlTelInput.setCountryData(countryData);
-```
-
 
 ## Utilities Script
 A custom build of Google's [libphonenumber](http://libphonenumber.googlecode.com) which enables the following features:
 
-* As-you-type formatting with `autoFormat` option, which prevents you from entering invalid characters, or too many characters
+* As-you-type formatting with `autoFormat` option, which prevents you from entering invalid characters
 * Validation with `isValidNumber`, `getNumberType` and `getValidationError` methods
 * Placeholder set to an example number for the selected country - even specify the type of number (e.g. mobile) using the `numberType` option
-* Extract the standardised (E.164) international number with `getCleanNumber` even when using the `nationalMode` option
+* Extract the standardised (E.164) international number with `getNumber` even when using the `nationalMode` option
 
 International number formatting/validation is hard (it varies by country/district, and we currently support ~230 countries). The only comprehensive solution I have found is libphonenumber, which I have precompiled into a single JavaScript file and included in the lib directory. Unfortunately even after minification it is still ~215KB, but if you use the `utilsScript` option then it will only fetch the script when the page has finished loading (to prevent blocking).
 
@@ -224,7 +230,14 @@ International number formatting/validation is hard (it varies by country/distric
 **Image path**  
 Depending on your project setup, you may need to override the path to flags.png in your CSS.  
 ```css
-.intl-tel-input .flag {background-image: url("path/to/flags.png");}
+.iti-flag {background-image: url("path/to/flags.png");}
+```
+_Note: we now support retina devices with a separate hi-res image (flags@2x.png). To override the path to that file, you must copy the @media query at the end of `src/css/flags.scss`._
+
+**Customise invalid key flash**  
+Set the colour like this (or set to `none` to disable):  
+```css
+.intl-tel-input input.iti-invalid-key {background-color: #FFC7C7;}
 ```
 
 **Full width input**  
@@ -245,15 +258,21 @@ The dropdown should automatically appear above/below the input depending on the 
 **Placeholders**  
 In order to get the automatic country-specific placeholders, simply omit the placeholder attribute on the `<input>`.
 
+**Bootstrap input groups**  
+Simply add this line to get [input groups](http://getbootstrap.com/components/#input-groups) working properly.
+```css
+.intl-tel-input {display: table-cell;}
+```
+_Note: there is currently [a bug](https://bugs.webkit.org/show_bug.cgi?id=141822) in Mobile Safari which causes a crash when you click the dropdown arrow (a CSS triangle) inside an input group. The simplest workaround is to remove the CSS triangle with this line: `.intl-tel-input .iti-flag .arrow {border: none;}`_
 
 ## Contributing
 I'm very open to contributions, big and small! For instructions on contributing to a project on Github, see this guide: [Fork A Repo](https://help.github.com/articles/fork-a-repo).
 
-I use [Grunt](http://gruntjs.com) to build the project, which relies on [npm](https://www.npmjs.org). In the project directory, run `npm install` to install Grunt (and other dependencies), then make your changes in the `src` directory and run `grunt build` to build the project.
+You will need to install [Grunt](http://gruntjs.com) to build the project, which relies on [npm](https://www.npmjs.org). You will also need [imagemagick](http://www.imagemagick.org/) to generate retina flag sprites. In the project directory, run `npm install` to install Grunt etc, then `grunt bower` to install other dependencies, then you should be good to run `grunt build` to build the project. At this point, the included demo.html should be working. You should make your changes in the `src` directory and be sure to run `grunt build` again before committing.
 
 
 ## Attributions
-* Flag images and CSS from [Flag Sprites](http://flag-sprites.com) (which uses [FamFamFam](https://github.com/tkrotoff/famfamfam_flags))
+* Flag images from [flag-icon-css](https://github.com/lipis/flag-icon-css)
 * Original country data from mledoze's [World countries in JSON, CSV and XML](https://github.com/mledoze/countries)
 * Formatting/validation/example number code from [libphonenumber](http://libphonenumber.googlecode.com)
 * Lookup user's country using [ipinfo.io](http://ipinfo.io)

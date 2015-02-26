@@ -13,6 +13,9 @@ var input,
   };
 
 var intlSetup = function(utilsScript) {
+  // by default put us in desktop mode
+  window.innerWidth = 1024;
+
   // this should only run the first time
   if (!window.intlTelInputUtilsBackup) {
     window.intlTelInputUtilsBackup = window.intlTelInputUtils;
@@ -61,7 +64,7 @@ var getSelectedFlagContainer = function(i) {
 
 var getSelectedFlagElement = function(i) {
   i = i || input;
-  return getSelectedFlagContainer(i).find(".flag");
+  return getSelectedFlagContainer(i).find(".iti-flag");
 };
 
 var getFlagsContainerElement = function(i) {

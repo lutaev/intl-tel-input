@@ -16,8 +16,8 @@ describe("autoFormat option:", function() {
 
   describe("input containing national number, init plugin with autoFormat and nationalMode enabled", function() {
 
-    var unformattedNumber = "7024181234",
-      formattedNumber = "(702) 418-1234";
+    var unformattedNumber = "70241812",
+      formattedNumber = "(702) 418-12";
 
     beforeEach(function() {
       input = $("<input value='" + unformattedNumber + "'>");
@@ -39,9 +39,12 @@ describe("autoFormat option:", function() {
       expect(getInputVal()).toEqual("7024-1812");
     });
 
-    it("adding another digit doesnt work", function() {
+    //TODO: this should be in it's own preventInvalidNumbers test file, with more tests
+    it("adding too many digits does work even tho it breaks the formatting", function() {
       triggerKeyOnInput("2");
-      expect(getInputVal()).toEqual(formattedNumber);
+      triggerKeyOnInput("2");
+      triggerKeyOnInput("2");
+      expect(getInputVal()).toEqual(unformattedNumber + "222");
     });
 
     it("check a previously broken case regarding a UK 0141 number", function() {
@@ -94,7 +97,7 @@ describe("autoFormat option:", function() {
 
 
 
-  describe("input with no initial value, init plugin with autoFormat enabled", function() {
+  describe("input with no initial value, init plugin with autoFormat enabled and nationalMode disabled", function() {
 
     beforeEach(function() {
       input = $("<input>");
@@ -102,7 +105,8 @@ describe("autoFormat option:", function() {
       input.appendTo($("body"));
 
       input.intlTelInput({
-        autoFormat: true
+        autoFormat: true,
+        nationalMode: false
       });
     });
 

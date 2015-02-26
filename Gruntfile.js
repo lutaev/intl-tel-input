@@ -8,14 +8,14 @@ module.exports = function(grunt) {
    * TASKS
    */
   // build everything ready for a commit
-  grunt.registerTask('build', ['sass', 'js', 'jasmine']);
+  grunt.registerTask('build', ['svg_sprite', 'svg2png', 'retinafy', 'sass', 'js', 'jasmine']);
   // just javascript
-  grunt.registerTask('js', ['template:js', 'jshint:build', 'uglify', 'replace:one', 'replace:two', 'replace:three', 'replace:four']);
+  grunt.registerTask('js', ['template:js', 'jshint', 'uglify', 'replace:one', 'replace:two', 'replace:three', 'replace:four']);
   // build examples
   grunt.registerTask('examples', ['template']);
   // Travis CI
   grunt.registerTask('travis', ['bower', 'jasmine']);
-  // bump version number in 3 files, build to update js headers, then commit, tag and push
-  grunt.registerTask('version', ['bump-only', 'uglify', 'bump-commit', 'shell:publish']);
+  // bump version number in 3 files, rebuild js to update headers, then commit, tag and push
+  grunt.registerTask('version', ['bump-only', 'js', 'bump-commit', 'shell:publish']);
 
 };
